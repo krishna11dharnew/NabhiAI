@@ -1,7 +1,6 @@
+# Nabhi-Ai 🤖🧠
 
-# Cortex-Ai 🤖🧠
-
-Welcome to **Cortex-Ai**, a production-ready Multi-Agent AI System built with the MERN Stack and a robust Microservices Architecture. This project integrates powerful AI capabilities using LangGraph, LangChain, RAG, and more, providing a scalable foundation for modern AI applications.
+Welcome to **Nabhi-Ai**, a production-ready Multi-Agent AI System built with the MERN Stack and a robust Microservices Architecture. This project integrates powerful AI capabilities using LangGraph, LangChain, RAG, and more, providing a scalable foundation for modern AI applications.
 
 ---
 
@@ -73,34 +72,5 @@ Make sure you have the following installed on your local machine:
 
 1. **Clone the repository:**
    ```bash
-   git clone [https://github.com/krishna11dharnew/cortex-Ai.git](https://github.com/krishna11dharnew/cortex-Ai.git)
-   cd cortex-Ai
-
-```
-
-2. **Install dependencies:**
-Navigate to the respective microservice/frontend directories and install the packages.
-```bash
-npm install
-
-```
-
-
-3. **Set up environment variables:**
-Create `.env` files in your service directories and configure your API keys (OpenAI/Anthropic, MongoDB URI, Redis URL, Qdrant URL, JWT Secrets, etc.).
-4. **Run the application:**
-You can run the frontend and backend microservices using your preferred method (Docker Compose is recommended if set up, otherwise run individual npm scripts).
-
----
-
-## 🤝 Contributing
-
-Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://www.google.com/search?q=https://github.com/krishna11dharnew/cortex-Ai/issues).
-
-## ⭐️ Show your support
-
-Give a ⭐️ if this project helped you!
-
-```
-
-```
+   git clone [https://github.com/krishna11dharnew/nabhi-Ai.git](https://github.com/krishna11dharnew/nabhi-Ai.git)
+   cd nabhi-Ai
