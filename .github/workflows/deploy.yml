@@ -33,7 +33,7 @@ jobs:
 
       # 1. Billing
       - name: Build Billing
-        run: docker build -f services/billing/Dockerfile -t billing:latest .
+        run: docker build -f backend/services/billing/Dockerfile -t billing:latest backend/
       - name: Tag Billing
         run: docker tag billing:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/billing-service:latest
       - name: Push Billing
@@ -41,7 +41,7 @@ jobs:
 
       # 2. Chat
       - name: Build Chat
-        run: docker build -f services/chat/Dockerfile -t chat:latest .
+        run: docker build -f backend/services/chat/Dockerfile -t chat:latest backend/
       - name: Tag Chat
         run: docker tag chat:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/chat-service:latest
       - name: Push Chat
@@ -49,7 +49,7 @@ jobs:
 
       # 3. Agent
       - name: Build Agent
-        run: docker build -f services/agent/Dockerfile -t agent:latest .
+        run: docker build -f backend/services/agent/Dockerfile -t agent:latest backend/
       - name: Tag Agent
         run: docker tag agent:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/agent-service:latest
       - name: Push Agent
@@ -57,7 +57,7 @@ jobs:
 
       # 4. Auth
       - name: Build Auth
-        run: docker build -f services/auth/Dockerfile -t auth:latest .
+        run: docker build -f backend/services/auth/Dockerfile -t auth:latest backend/
       - name: Tag Auth
         run: docker tag auth:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/auth-service:latest
       - name: Push Auth
@@ -65,7 +65,7 @@ jobs:
 
       # 5. Gateway
       - name: Build Gateway
-        run: docker build -f services/gateway/Dockerfile -t gateway:latest .
+        run: docker build -f backend/services/gateway/Dockerfile -t gateway:latest backend/
       - name: Tag Gateway
         run: docker tag gateway:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/gateway:latest
       - name: Push Gateway
