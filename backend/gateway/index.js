@@ -35,14 +35,22 @@ app.use("/api/agent",protect,proxyWithUser(process.env.AGENT_SERVICE))
 app.use("/api/billing",protect,proxyWithUser(process.env.BILLING_SERVICE))
 
 
+// app.get("/", (req, res) => {
+//   res.status(200).json({
+//     service: "gateway",
+//     status: "ok",
+//     active_auth_url: process.env.AUTH_SERVICE || "MILA_HI_NAHI"
+//   });
+// });
 app.get("/", (req, res) => {
   res.status(200).json({
     service: "gateway",
     status: "ok",
+    version: "v1.0.1", // <--- Har baar naya deploy karte waqt iska version badha dena (jaise v1.0.2)
+    deployed_at: new Date().toISOString(), // <--- Ye exact timestamp bata dega ki kab naya build live hua
     active_auth_url: process.env.AUTH_SERVICE || "MILA_HI_NAHI"
   });
 });
-
 
 app.listen(port, () => {
   console.log(
