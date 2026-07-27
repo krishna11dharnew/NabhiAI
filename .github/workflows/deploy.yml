@@ -63,9 +63,9 @@ jobs:
       - name: Push Auth
         run: docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/auth-service:latest
 
-      # 5. Gateway
+      # 5. Gateway (Path fixed according to your project structure)
       - name: Build Gateway
-        run: docker build -f backend/services/gateway/Dockerfile -t gateway:latest backend/
+        run: docker build -f backend/gateway/Dockerfile -t gateway:latest backend/
       - name: Tag Gateway
         run: docker tag gateway:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/gateway:latest
       - name: Push Gateway
