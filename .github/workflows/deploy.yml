@@ -1,4 +1,4 @@
-name: NabhiAi deployment
+name: cortex ai deployment
 
 on:
   push:
