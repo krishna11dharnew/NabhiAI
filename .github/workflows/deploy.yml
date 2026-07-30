@@ -1,4 +1,4 @@
-name: cortex ai deployment
+name: NabhiAi deployment
 
 on:
   push:
@@ -29,11 +29,15 @@ jobs:
 
       # ==========================================
       # PART 1: BUILD & PUSH ALL SERVICES TO ECR
+      # Build context is ./backend (not backend/services/...)
+      # so relative imports of ../../shared etc. resolve exactly
+      # like your local `docker build -f ./services/x/Dockerfile .`
+      # commands run from inside the backend/ folder.
       # ==========================================
 
       # 1. Billing
       - name: Build Billing
-        run: docker build -f backend/services/billing/Dockerfile -t billing:latest backend/
+        run: docker build -f backend/services/billing/Dockerfile -t billing:latest ./backend
       - name: Tag Billing
         run: docker tag billing:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/billing-service:latest
       - name: Push Billing
@@ -41,7 +45,7 @@ jobs:
 
       # 2. Chat
       - name: Build Chat
-        run: docker build -f backend/services/chat/Dockerfile -t chat:latest backend/
+        run: docker build -f backend/services/chat/Dockerfile -t chat:latest ./backend
       - name: Tag Chat
         run: docker tag chat:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/chat-service:latest
       - name: Push Chat
@@ -49,7 +53,7 @@ jobs:
 
       # 3. Agent
       - name: Build Agent
-        run: docker build -f backend/services/agent/Dockerfile -t agent:latest backend/
+        run: docker build -f backend/services/agent/Dockerfile -t agent:latest ./backend
       - name: Tag Agent
         run: docker tag agent:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/agent-service:latest
       - name: Push Agent
@@ -57,15 +61,15 @@ jobs:
 
       # 4. Auth
       - name: Build Auth
-        run: docker build -f backend/services/auth/Dockerfile -t auth:latest backend/
+        run: docker build -f backend/services/auth/Dockerfile -t auth:latest ./backend
       - name: Tag Auth
         run: docker tag auth:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/auth-service:latest
       - name: Push Auth
         run: docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/auth-service:latest
 
-      # 5. Gateway
+      # 5. Gateway (lives directly in backend/gateway, NOT under backend/services)
       - name: Build Gateway
-        run: docker build -f backend/gateway/Dockerfile -t gateway:latest backend/
+        run: docker build -f backend/gateway/Dockerfile -t gateway:latest ./backend
       - name: Tag Gateway
         run: docker tag gateway:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/gateway:latest
       - name: Push Gateway
@@ -118,6 +122,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: aws configure
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # VITE_SERVER_URL must be the live CloudFront/Gateway URL
+      # (e.g. https://d1hw78wy54bltq.cloudfront.net), never localhost,
+      # since Vite bakes these values into the JS bundle at build time.
       - name: build frontend
         env:
           VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
@@ -127,13 +146,6 @@ jobs:
           cd frontend
           npm install
           npm run build
-
-      - name: aws configure
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
 
       - name: upload to s3
         run: |
@@ -145,6 +157,5 @@ jobs:
       - name: invalidate cloudfront
         run: |
           aws cloudfront create-invalidation \
-          --distribution-id \
-          ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
+          --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
           --paths "/*"
